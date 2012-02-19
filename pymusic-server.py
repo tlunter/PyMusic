@@ -30,7 +30,7 @@ class iTunesSearcher:
 		if searchTracks:
 			searchTracks[0].Play()
 			
-		return self.currentTrack
+		return self.currentTrack()
 		
 	@clear
 	def search(self, text):
