@@ -30,13 +30,15 @@ class iTunesSearcher:
 		if searchTracks:
 			searchTracks[0].Play()
 			
-		return self.trackListing(self.iTunes.CurrentTrack)
+		return self.currentTrack
 		
 	@clear
 	def search(self, text):
 		searchTracks = self.library.Search(text,0)
 		if searchTracks:
 			results = [self.trackListing(item) for item in searchTracks]
+		else:
+			results = []
 		return results
 		
 	@clear
@@ -70,10 +72,20 @@ class iTunesSearcher:
 		data = self.iTunes.CurrentTrack
 		return (self.trackListing(data) if data else "None")
 		
+	@clear
+	def nextTrack(self):
+		self.iTunes.NextTrack()
+		return self.currentTrack()
+		
+	@clear
+	def prevTrack(self):
+		self.iTunes.PreviousTrack()
+		return self.currentTrack()
+	
 	def trackListing(self,item):
 		return "%s - %s - %s" %(item.Artist,item.Name,item.Album)
 
-		
+		 
 ###############################################################################
 		
 ###############################################################################
