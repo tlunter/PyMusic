@@ -3,61 +3,79 @@ import sys
 
 ###############################################################################
 
+def getInput(text = ""):
+    userInput = raw_input(text)
+    userInput = userInput.strip()
+    
+    if userInput == "":
+        return getInput(text)
+    else:
+        return userInput
+
+###############################################################################
+
 def main():
-	action = raw_input("Do what? ")
-	print ""
-	if(action.lower() == "c"):
-		currentTrack()
-	elif(action.lower() == "p"):
-		playPause()
-	elif(action.lower() == "s"):
-		search()
-	elif(action.lower() == "ps"):
-		playSong()
-	elif(action.lower() == "m"):
-		mute()
-	elif(action.lower() == "vu"):
-		volumeUp()
-	elif(action.lower() == "vd"):
-		volumeDown()
-	elif(action.lower() == "h"):
-		help()
-	elif(action.lower() == "x"):
-		sys.exit(0)
-	else:
-		main()
+    help()
+    while(True):
+        print ""
+    	userInput = getInput("Do what? ")
+	    
+    	splitInput = userInput.split(None, 1)
+	
+    	action = splitInput[0]
+	
+    	try:
+    	    splitInput[1]
+    	except IndexError:
+    	    if action == "ps" or action == "s":
+    	        continue
+    	    splitInput.append("")
+	    
+    	fnData = splitInput[1]
+	
+    	if(action.lower() == "c"):
+    		currentTrack()
+    	elif(action.lower() == "p"):
+    		playPause()
+    	elif(action.lower() == "s"):
+    		search(fnData)
+    	elif(action.lower() == "ps"):
+    		playSong(fnData)
+    	elif(action.lower() == "m"):
+    		mute()
+    	elif(action.lower() == "vu"):
+    		volumeUp()
+    	elif(action.lower() == "vd"):
+    		volumeDown()
+    	elif(action.lower() == "h"):
+    		help()
+    	elif(action.lower() == "x"):
+    		sys.exit(0)
+    	else:
+    		main()
 		
 def currentTrack():
 	print iTunesServer.currentTrack()
-	main()
 	
-def playSong():
-	playInput = raw_input("Search Track: ")
-	print 'Now Playing: %s'%(iTunesServer.playSong(playInput))
-	main()
+def playSong(songData):
+	print "Now Playing: %s" %(iTunesServer.playSong(songData))
 	
-def search():
-	searchInput = raw_input("Search: ")
-	searchResults = iTunesServer.search(searchInput)
+def search(songData):
+	searchResults = iTunesServer.search(songData)
 	for track in searchResults:
 		print track
-	main()
 	
 def mute():
-	print ("Muted" if iTunesServer.mute() else "Not muted")
-	main()
+	print "Muted" if iTunesServer.mute() else "Not muted"
 	
 def volumeUp():
 	print "%d/100" %(iTunesServer.volumeUp())
-	main()
 
 def volumeDown():
 	print "%d/100" %(iTunesServer.volumeDown())
-	main()
 	
 def playPause():
 	print "Playing" if iTunesServer.playPause() else "Paused"
-	main()
 	
 def help():
 	print "c  = current track"
@@ -69,7 +87,6 @@ def help():
 	print "vd = volume down"
 	print "h  = show these commands"
 	print "x  = exit"
-	main()
 	
 ###############################################################################
 
@@ -78,7 +95,7 @@ try:
 	iTunesServer.init()
 	
 	print "What would you like to do?"
-	help()
+	main()
 		
 except KeyboardInterrupt:
 	sys.exit(0)
